@@ -1,16 +1,42 @@
-import express from 'express';
+import express from "express";
 import path from "path";
+import dotenv from "dotenv";
 
-import { abc } from "test/module_test";
+const env = dotenv.config();
+
+if (env.error) {
+  throw env.error;
+}
+
+const envParsed = env.parsed;
 
 const app = express();
+const asyncRoute =
+  (
+    f: (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => void
+  ) =>
+  (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): any => {
+    return Promise.resolve(f(req, res, next)).catch(next);
+  };
 
-app.get("/", (_, res) => {
-  return res.json({ msg: "Hello world" });
-});
+app.get("/", (req, res) => {
+  (async () => {
+    /** */
+  })();
 
-app.get("/home", (_, res) => {
+  console.log("a");
+
+  console.log("b");
+
   return res.sendFile("home.html", { root: path.resolve(__dirname, "./view") });
 });
 
-app.listen(8080, () => console.log(`Boot server, ${abc}`));
+app.listen(8080, () => console.log(`Boot server`));
